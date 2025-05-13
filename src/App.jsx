@@ -5,9 +5,22 @@ function App() {
   const [name,setName] = useState("");
   const [datetime,setDatetime] = useState("");
   const [desc,setDesc] = useState("");
+  function addNewTransaction(e){
+    e.preventDefault()
+    // const url = process.env.REACT_APP_API_URL+'/transaction';
+    const url = "http://localhost:3000/api/transaction" || "not_defined";
 
-  function addNewTransaction(){
+    // console.log(url);
     
+    fetch(url,{
+    method:'POST',
+    headers:{'Content-type':'application/json'},
+    body:JSON.stringify({name,desc,datetime})
+    }).then(res=>{
+      res.json().then(json=>{
+        console.log('restult', json);   
+      })
+    })
   }
 
   return (
