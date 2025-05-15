@@ -13,15 +13,20 @@ const port = 3000;
 app.get("/api/test", (req, res) => {
   const transaction = new Transaction()
   transaction.save();
-  res.send("Hello Worldsdfg!");
+  res.json("Hello Worldsdfg!");
 });
 
 app.post("/api/transaction", (req, res)=>{
-  const{name,desc,datetime}=req.body;
-  const transaction = new Transaction({name,desc,datetime})
+  const{name,desc,datetime,price}=req.body;
+  const transaction = new Transaction({name,desc,datetime,price})
   res.json(req.body)
   transaction.save();
 })
+
+app.get("/api/transactions", async (req,res)=>{
+  const transactions= await Transaction.find();
+  res.json(transactions)
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

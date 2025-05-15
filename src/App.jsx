@@ -1,10 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
   const [name,setName] = useState("");
   const [datetime,setDatetime] = useState("");
   const [desc,setDesc] = useState("");
+  const [price,setPrice] = useState("");
+  const [transactions, setTransactions] = useState("");
+
+  useEffect(()=>{
+    getTransaction().then(setTransactions);
+    
+    // (transactions=>{
+    // transactions.map((el)=>{
+    //   console.log(el.name);  
+    // });
+      
+    
+  },[])
+
+  useEffect(()=>{
+    getTransaction().then(setTransactions);  
+  },[name])
+
+  async function getTransaction(){
+    const url = "http://localhost:3000/api/transactions" || "not_defined";
+    const response=await fetch(url);
+    return await response.json();
+     
+  }
   function addNewTransaction(e){
     e.preventDefault()
     // const url = process.env.REACT_APP_API_URL+'/transaction';
@@ -15,19 +39,28 @@ function App() {
     fetch(url,{
     method:'POST',
     headers:{'Content-type':'application/json'},
-    body:JSON.stringify({name,desc,datetime})
+    body:JSON.stringify({name,desc,datetime,price})
     }).then(res=>{
       res.json().then(json=>{
+        setName("")
+        setDatetime("")
+        setDesc("")
+        setPrice("")
         console.log('restult', json);   
       })
     })
+  }
+
+  let balance=0;
+  for (const transaction of transactions) {
+    balance+=transaction.price;
   }
 
   return (
     <>
       <div className="main">
         <h1>
-          $500 <span>.00</span>
+          {balance}<span>.00$</span>
         </h1>
 
         <form onSubmit={addNewTransaction}>
@@ -36,7 +69,7 @@ function App() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="transaction"
+              placeholder="Item name"
             />
             <input
               type="datetime-local"
@@ -52,41 +85,43 @@ function App() {
               placeholder="description"
             />
           </div>
+          <div className="price">
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Price $$"
+            />
+          </div>
           <button type="submit" className="">
             Add New Transaction
           </button>
         </form>
         <div className="transactions">
-          <div className="transaction ">
-            <div className="left ">
-              <div className="name">S24 Ultra</div>
-              <div className="desc">Got it under heavy discount</div>
-            </div>
-            <div className="right ">
-              <div className="price text-red-500">-$400</div>
-              <div className="datetime">2077-12-21 15:45</div>
-            </div>
-          </div>
-          <div className="transaction ">
-            <div className="left ">
-              <div className="name">4090 OC </div>
-              <div className="desc">Got it under heavy discount</div>
-            </div>
-            <div className="right ">
-              <div className="price text-green-400">+$800</div>
-              <div className="datetime">2077-12-21 15:45</div>
-            </div>
-          </div>
-          <div className="transaction ">
-            <div className="left">
-              <div className="name">S24 Ultra</div>
-              <div className="desc">Got it under heavy discount</div>
-            </div>
-            <div className="right">
-              <div className="price text-red-500">-$400</div>
-              <div className="datetime">2077-12-21 15:45</div>
-            </div>
-          </div>
+          
+          {
+          (transactions.length > 0) && (transactions.map((transaction) => {
+            return (
+              <div className="transaction ">
+                <div className="left ">
+                  <div className="name">{transaction.name}</div>
+                  <div className="desc">{transaction.desc}</div>
+                </div>
+                <div className="right ">
+                  <div
+                    className={
+                      "price " + (transaction.price < 0
+                        ? "text-red-500"
+                        : "text-green-400")
+                    }
+                  >
+                    {transaction.price}
+                  </div>
+                  <div className="datetime">{transaction.datetime}</div>
+                </div>
+              </div>)
+              }))
+            }
         </div>
       </div>
     </>
