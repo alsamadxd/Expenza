@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "../public/themeContext";
 import "./App.css";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
   const [desc,setDesc] = useState("");
   const [price,setPrice] = useState("");
   const [transactions, setTransactions] = useState("");
+  const { theme, toggleTheme, isDark } = useTheme();
 
   useEffect(()=>{
     getTransaction().then(setTransactions);
@@ -58,70 +60,109 @@ function App() {
 
   return (
     <>
-      <div className="main">
-        <h1>
-          {balance}<span>.00$</span>
-        </h1>
+      <div
+        style={{
+          backgroundColor: theme.background,
+          color: theme.text,
+          minHeight: "100vh",
+          padding: "2rem",
+        }}
+      >
+        <button
+          onClick={toggleTheme}
+          style={{
+            backgroundColor: theme.primary,
+            color: "#fff",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+          }}
+        >
+          Switch to {isDark ? "Light" : "Dark"} Mode
+        </button>
 
-        <form onSubmit={addNewTransaction}>
-          <div className="basic">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Item name"
-            />
-            <input
-              type="datetime-local"
-              value={datetime}
-              onChange={(e) => setDatetime(e.target.value)}
-            />
-          </div>
-          <div className="description">
-            <input
-              type="text"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              placeholder="description"
-            />
-          </div>
-          <div className="price">
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Price $$"
-            />
-          </div>
-          <button type="submit" className="">
-            Add New Transaction
-          </button>
-        </form>
-        <div className="transactions">
-          
-          {
-          (transactions.length > 0) && (transactions.map((transaction) => {
-            return (
-              <div className="transaction ">
-                <div className="left ">
-                  <div className="name">{transaction.name}</div>
-                  <div className="desc">{transaction.desc}</div>
-                </div>
-                <div className="right ">
-                  <div
-                    className={
-                      "price " + (transaction.price < 0
-                        ? "text-red-500"
-                        : "text-green-400")
-                    }
-                  >
-                    {transaction.price}
+        <div className="main">
+          <h1
+            style={{
+              color: theme.primary,
+              
+              
+            }}
+          >
+            {balance}
+            <span>.00$</span>
+          </h1>
+
+          <form onSubmit={addNewTransaction}>
+            <div className="basic">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Item name"
+              />
+              <input
+                type="datetime-local"
+                value={datetime}
+                onChange={(e) => setDatetime(e.target.value)}
+              />
+            </div>
+            <div className="description">
+              <input
+                type="text"
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                placeholder="description"
+              />
+            </div>
+            <div className="price">
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Price $$"
+              />
+            </div>
+            <button
+              type="submit"
+              className=""
+              style={{
+                backgroundColor: theme.primary,
+                color: "#fff",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+              }}
+            >
+              Add New Transaction
+            </button>
+          </form>
+          <div className="transactions">
+            {transactions.length > 0 &&
+              transactions.map((transaction) => {
+                return (
+                  <div className="transaction ">
+                    <div className="left ">
+                      <div className="name">{transaction.name}</div>
+                      <div className="desc">{transaction.desc}</div>
+                    </div>
+                    <div className="right ">
+                      <div
+                        className={
+                          "price " +
+                          (transaction.price < 0
+                            ? "text-red-500"
+                            : "text-green-400")
+                        }
+                      >
+                        {transaction.price}
+                      </div>
+                      <div className="datetime">{transaction.datetime}</div>
+                    </div>
                   </div>
-                  <div className="datetime">{transaction.datetime}</div>
-                </div>
-              </div>)
-              }))
-            }
+                );
+              })}
+          </div>
         </div>
       </div>
     </>

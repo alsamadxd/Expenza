@@ -23,7 +23,7 @@ form {
 form input {
   width: 100%;
   background-color: transparent;
-  color: #ddd;
+  /* color: #ddd; */
   border: 2px solid #30313d;
   padding: 2px 5px;
   border-radius: 5px;
@@ -43,7 +43,10 @@ form button{
   border: 0;
   border-radius: 5px;
   padding: 5px;
-  background-color: #664545;
+  /* background-color: #664545; */
+}
+button:hover{
+  cursor: pointer;
 }
 
 div.transactions{
@@ -69,4 +72,31 @@ div.transaction div.desc{
 div.transaction div.datetime{
   font-size: .7rem;
   color: #888;
+}
+
+input,
+textarea {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6B7280;
+}
+body.dark input,
+body.dark textarea {
+  background-color: #374151;
+  color: #F9FAFB;            
+  border: 1px solid #4B5563;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #9CA3AF;
 }
